@@ -180,8 +180,7 @@ GROUP BY i.itype,i.location
 ORDER BY it.description, av.lib ASC</code></pre>
 				<h4><span class="mw-headline" id="Total_number_of_items_at_each_library">Total number of items at each library</span></h4>
 				<p>Notes: Total of each library's holdings</p>
-				<pre><code class="language-sql">
-SELECT homebranch,count(*) as items 
+				<pre><code class="language-sql">SELECT homebranch,count(*) as items 
 FROM items 
 GROUP BY homebranch 
 ORDER BY homebranch asc </code></pre>
@@ -202,7 +201,7 @@ FROM biblio</code></pre>
 FROM items</code></pre>
 				<h4><span class="mw-headline" id="Lost_report_.28hyperlinked.29">Lost report (hyperlinked)</span></h4>
 				<p>Notes: Modified Items Lost report, includes call# & # of checkouts with links</p>
-				<pre><code class="language-sql">SELECT CONCAT('<a href='/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,<i&gt;&gt;',title,'</a>') AS Title, biblio.author, authorised_values.lib as 'Lost Code', CONCAT('<a href='/cgi-bin/koha/catalogue/moredetail.pl?biblionumber=',biblio.biblionumber,</i&gt;&gt;',barcode,'</a>') AS Barcode,  items.itemcallnumber,  items.datelastseen, items.price, items.homebranch as 'Library',  items.holdingbranch, items.itemnotes, items.issues as 'Checkouts'
+				<pre><code class="language-sql">SELECT CONCAT('<a href='/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,',title,'</a>') AS Title, biblio.author, authorised_values.lib as 'Lost Code', CONCAT('<a href='/cgi-bin/koha/catalogue/moredetail.pl?biblionumber=',biblio.biblionumber,</i&gt;&gt;',barcode,'</a>') AS Barcode,  items.itemcallnumber,  items.datelastseen, items.price, items.homebranch as 'Library',  items.holdingbranch, items.itemnotes, items.issues as 'Checkouts'
 FROM items 
 LEFT JOIN biblio on (items.biblionumber = biblio.biblionumber)   
 LEFT JOIN authorised_values ON (items.itemlost=authorised_values.authorised_value) 
