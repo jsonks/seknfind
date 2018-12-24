@@ -77,7 +77,7 @@
 <h4><span class="mw-headline" id="Newest_items_added_in_a_ccode">Newest items added in a ccode</span></h4>
 <p>Notes: Finds the most recent items added in a collection code within the past year
 </p>
-<pre class="language-SQL">SELECT b.title, b.author, b.biblionumber, b.datecreated, i.barcode, i.dateaccessioned
+<pre class="language-sql">SELECT b.title, b.author, b.biblionumber, b.datecreated, i.barcode, i.dateaccessioned
 FROM biblio b
 LEFT JOIN items i USING (biblionumber)
 WHERE i.homebranch = <<Select Library|branches>>
@@ -88,7 +88,7 @@ ORDER BY i.dateaccessioned DESC
 <h4><span class="mw-headline" id="Items_added_in_a_shelf_location_within_a_date_range">Items added in a shelf location within a date range</span></h4>
 <p>Notes: Count of acquisitions in a selected yeah by shelf location
 </p>
-<pre class="language-SQL">SELECT authorised_values.lib AS 'Shelving Location', COUNT(1) AS Count
+<pre class="language-sql">SELECT authorised_values.lib AS 'Shelving Location', COUNT(1) AS Count
 FROM items
 LEFT JOIN authorised_values ON (items.location=authorised_values.authorised_value)
 WHERE items.homebranch = <<Library|branches>>
@@ -99,7 +99,7 @@ LIMIT 100
 <h4><span class="mw-headline" id="Items_added_to_a_shelf_location_within_a_specified_year.2C_summarized_by_month">Items added to a shelf location within a specified year, summarized by month</span></h4>
 <p>Notes: Lists out items added each month for the specified year in the specified shelf location
 </p>
-<pre class="language-SQL">SELECT  YEAR(items.dateaccessioned) as year, MONTHNAME(items.dateaccessioned) as month, concat(biblio.title, ' ', ExtractValue((
+<pre class="language-sql">SELECT  YEAR(items.dateaccessioned) as year, MONTHNAME(items.dateaccessioned) as month, concat(biblio.title, ' ', ExtractValue((
   SELECT marcxml 
   FROM biblioitems
   WHERE biblio.biblionumber = biblioitems.biblionumber),
@@ -116,14 +116,14 @@ ORDER BY MONTH(items.dateaccessioned), biblio.title
 <h4><span class="mw-headline" id="Authorized_values_list">Authorized values list</span></h4>
 <p>Notes: Lists all authorized values and their descriptions
 </p>
-<pre class="language-SQL">SELECT authorised_value, id, category, lib
+<pre class="language-sql">SELECT authorised_value, id, category, lib
 FROM authorised_values
 ORDER BY category
 </pre>
 <h4><span class="mw-headline" id="Patrons_with_permissions">Patrons with permissions</span></h4>
 <p>Notes: Lists patrons who have staff permissions
 </p>
-<pre class="language-SQL">SELECT  borrowers.cardnumber, borrowers.surname, borrowers.firstname, borrowers.branchcode, borrowers.categorycode, borrowers.flags as 'permissions'
+<pre class="language-sql">SELECT  borrowers.cardnumber, borrowers.surname, borrowers.firstname, borrowers.branchcode, borrowers.categorycode, borrowers.flags as 'permissions'
 FROM borrowers
 WHERE borrowers.branchcode = <<Select your library|branches>> 
  AND borrowers.flags > 0
@@ -132,7 +132,7 @@ ORDER BY borrowers.surname asc
 <h4><span class="mw-headline" id="All_Patron_Permissions">All Patron Permissions</span></h4>
 <p>Notes: Lists out which permissions are on and off for each account with permissions
 </p>
-<pre class="language-SQL">SELECT surname AS 'Last Name',firstname AS 'First Name',cardnumber AS 'Card Number',categorycode,userid AS 'UserID',branchcode AS 'Library',Super AS 'superlibrarian',A AS 'circulate',SubA AS 'circulate subs',B AS 'catalogue',C AS 'parameters',SubC AS 'parameters subs',D AS 'borrowers',E AS 'permissions',F AS 'reserveforothers',SubF AS 'reserveforothers subs',G AS 'borrow',I AS 'editcatalogue',SubI AS 'editcatalogue subs',J AS 'updatecharges',K AS 'acquisition',SubK AS 'acquisition subs',L AS 'management',M AS 'tools',SubM1 AS 'tools subs (Pt 1)',SubM2 AS 'tools subs (Pt 2)',N AS 'editauthorities',O AS 'serials',SubO AS 'serials subs',P AS 'reports',SubP AS 'reports subs',Q AS 'staffaccess'
+<pre class="language-sql">SELECT surname AS 'Last Name',firstname AS 'First Name',cardnumber AS 'Card Number',categorycode,userid AS 'UserID',branchcode AS 'Library',Super AS 'superlibrarian',A AS 'circulate',SubA AS 'circulate subs',B AS 'catalogue',C AS 'parameters',SubC AS 'parameters subs',D AS 'borrowers',E AS 'permissions',F AS 'reserveforothers',SubF AS 'reserveforothers subs',G AS 'borrow',I AS 'editcatalogue',SubI AS 'editcatalogue subs',J AS 'updatecharges',K AS 'acquisition',SubK AS 'acquisition subs',L AS 'management',M AS 'tools',SubM1 AS 'tools subs (Pt 1)',SubM2 AS 'tools subs (Pt 2)',N AS 'editauthorities',O AS 'serials',SubO AS 'serials subs',P AS 'reports',SubP AS 'reports subs',Q AS 'staffaccess'
 FROM (SELECT b.surname,b.firstname,b.cardnumber,b.userid,b.branchcode,b.categorycode,@CHECK:=b.flags AS 'CheckQ',IF(@Check-131072>=0,@Q:='On',@Q:='Off') AS 'Q',
 IF(@Check-131072>=0,@CHECK:=@Check-131072,@CHECK) AS 'CheckP',IF(@Check-65536>=0,@P:='On',@P:='Off') AS 'P',(SELECT group_concat(up.code) FROM user_permissions up WHERE up.module_bit='16' AND borrowernumber=b.borrowernumber) AS SubP,
 IF(@Check-65536>=0,@CHECK:=@Check-65536,@CHECK) AS 'CheckO',IF(@Check-32768>=0,@O:='On',@O:='Off') AS 'O',(SELECT group_concat(up.code) FROM user_permissions up WHERE up.module_bit='15' AND borrowernumber=b.borrowernumber) AS SubO,
@@ -159,7 +159,7 @@ ORDER BY surname, firstname ASC
 <h4><span class="mw-headline" id="Items_added_in_a_year">Items added in a year</span></h4>
 <p>Notes: Count of items added at each library in a selected year based on acquisition date (migration libraries & retros will be inaccurate)
 </p>
-<pre class="language-SQL">SELECT i.homebranch, COUNT(*)
+<pre class="language-sql">SELECT i.homebranch, COUNT(*)
 FROM items i
 WHERE YEAR(i.dateaccessioned) = <<Year>>
  AND (i.ccode <> 'PER' AND i.ccode <> 'ILL' AND i.ccode <> 'ROT' OR i.ccode IS NULL)
@@ -170,7 +170,7 @@ LIMIT 50
 <h4><span class="mw-headline" id="Items_deleted_in_a_year">Items deleted in a year</span></h4>
 <p>Notes: Count of items deleted at each library in a selected year, years prior to migration will be inaccurate
 </p>
-<pre class="language-SQL">SELECT homebranch, COUNT(*)
+<pre class="language-sql">SELECT homebranch, COUNT(*)
 FROM deleteditems
 WHERE YEAR(timestamp)=<<Year (YYYY)>>
 GROUP BY homebranch
@@ -181,7 +181,7 @@ LIMIT 50
 <h4><span class="mw-headline" id="Contents_of_an_iType">Contents of an iType</span></h4>
 <p>Notes: Lists ALL items in an item type, may be dangerous on high use categories
 </p>
-<pre class="language-SQL">SELECT  items.barcode, items.homebranch, items.location, items.itype, items.ccode, biblio.title, biblio.author 
+<pre class="language-sql">SELECT  items.barcode, items.homebranch, items.location, items.itype, items.ccode, biblio.title, biblio.author 
 FROM items 
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
 LEFT JOIN biblio on (biblioitems.biblionumber=biblio.biblionumber)   
@@ -190,7 +190,7 @@ WHERE items.itype = <<Item Type|itemtypes>>
 <h4><span class="mw-headline" id="Contents_of_a_Shelf_Location">Contents of a Shelf Location</span></h4>
 <p>Notes: Lists ALL items in a shelf location, may be dangerous on high use categories
 </p>
-<pre class="language-SQL">SELECT  items.barcode, items.homebranch, items.holdingbranch, items.location, items.ccode, items.itype, items.itemcallnumber, 
+<pre class="language-sql">SELECT  items.barcode, items.homebranch, items.holdingbranch, items.location, items.ccode, items.itype, items.itemcallnumber, 
                  biblioitems.itemtype, biblio.author, biblio.title, items.itemlost, ExtractValue(marcxml,'//datafield[@tag="300"]/subfield[@code>="a"]') AS Description
 FROM items
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber)
@@ -200,7 +200,7 @@ WHERE items.location=<<Select Shelf Location|LOC>>
 <h4><span class="mw-headline" id="Item_count_by_iType">Item count by iType</span></h4>
 <p>Notes: Counts how many items are in each iType at selected library, includes total
 </p>
-<pre class="language-SQL">SELECT itemtypes.description AS 'Item Type', COUNT(1) AS Count
+<pre class="language-sql">SELECT itemtypes.description AS 'Item Type', COUNT(1) AS Count
 FROM items
 LEFT JOIN itemtypes ON (items.itype=itemtypes.itemtype)
 WHERE items.homebranch = <<Choose Library|branches>>
@@ -213,7 +213,7 @@ WHERE homebranch = <<Choose Library|branches>>
 <h4><span class="mw-headline" id="Item_count_by_shelf_location_.2B_item_type">Item count by shelf location + item type</span></h4>
 <p>Notes: Counts how many items are each combination of shelf location and item type at a library
 </p>
-<pre class="language-SQL">SELECT av.lib AS 'Shelving Location', it.description AS 'Item Type', COUNT(1) as Count
+<pre class="language-sql">SELECT av.lib AS 'Shelving Location', it.description AS 'Item Type', COUNT(1) as Count
 FROM items i
 LEFT JOIN authorised_values av ON (i.location=av.authorised_value)
 LEFT JOIN itemtypes it ON (i.itype=it.itemtype)
@@ -224,7 +224,7 @@ ORDER BY it.description, av.lib ASC
 <h4><span class="mw-headline" id="Total_number_of_items_at_each_library">Total number of items at each library</span></h4>
 <p>Notes: Total of each library's holdings
 </p>
-<pre class="language-SQL">SELECT homebranch,count(*) as items 
+<pre class="language-sql">SELECT homebranch,count(*) as items 
 FROM items 
 GROUP BY homebranch 
 ORDER BY homebranch asc 
@@ -232,7 +232,7 @@ ORDER BY homebranch asc
 <h4><span class="mw-headline" id="Total_number_of_items_at_each_library_excluding_periodicals">Total number of items at each library excluding periodicals</span></h4>
 <p>Notes: Total of each library's holdings, minus periodicals
 </p>
-<pre class="language-SQL">SELECT homebranch,count(itemnumber) as items 
+<pre class="language-sql">SELECT homebranch,count(itemnumber) as items 
 FROM items 
 WHERE items.ccode <> 'PER'
 GROUP BY homebranch 
@@ -241,19 +241,19 @@ ORDER BY homebranch asc
 <h4><span class="mw-headline" id="Total_bib_count">Total bib count</span></h4>
 <p>Notes: Number of bibs in the entire collection
 </p>
-<pre class="language-SQL">SELECT COUNT(1) as Records
+<pre class="language-sql">SELECT COUNT(1) as Records
 FROM biblio
 </pre>
 <h4><span class="mw-headline" id="Total_item_count">Total item count</span></h4>
 <p>Notes: Number of items in the entire collection
 </p>
-<pre class="language-SQL">SELECT COUNT(1) as Items 
+<pre class="language-sql">SELECT COUNT(1) as Items 
 FROM items
 </pre>
 <h4><span class="mw-headline" id="Lost_report_.28hyperlinked.29">Lost report (hyperlinked)</span></h4>
 <p>Notes: Modified Items Lost report, includes call# & # of checkouts with links
 </p>
-<pre class="language-SQL">SELECT     
+<pre class="language-sql">SELECT     
  CONCAT('<a href='/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,<i>>',title,'</a>') AS Title, biblio.author, authorised_values.lib as 'Lost Code', CONCAT('<a href='/cgi-bin/koha/catalogue/moredetail.pl?biblionumber=',biblio.biblionumber,</i>>',barcode,'</a>') AS Barcode,  items.itemcallnumber,  items.datelastseen, items.price, items.homebranch as 'Library',  items.holdingbranch, items.itemnotes, items.issues as 'Checkouts'
 FROM items 
 LEFT JOIN biblio on (items.biblionumber = biblio.biblionumber)   
@@ -267,7 +267,7 @@ ORDER BY
 <h4><span class="mw-headline" id="Lost_report_.28no_links.29">Lost report (no links)</span></h4>
 <p>Notes: Modified Items Lost report, includes call# & # of checkouts
 </p>
-<pre class="language-SQL">SELECT     
+<pre class="language-sql">SELECT     
  biblio.title, biblio.author, authorised_values.lib as 'Lost Code', items.barcode,  items.itemcallnumber,  items.datelastseen, items.price, items.homebranch as 'Library',  items.holdingbranch, items.itemnotes, items.issues as 'Checkouts'
 FROM items 
 LEFT JOIN biblio on (items.biblionumber = biblio.biblionumber)   
@@ -282,7 +282,7 @@ ORDER BY
 <h4><span class="mw-headline" id="Average_circs_each_hour">Average circs each hour</span></h4>
 <p>Notes: Averages how many circulations occured each hour in a date range at a specific library. Can be used to locate your busiest times of day in terms of checkouts.
 </p>
-<pre class="language-SQL">SELECT date_format(`datetime`,'%H') as 'Hour', count(*) as 'Checkouts and Renews' 
+<pre class="language-sql">SELECT date_format(`datetime`,'%H') as 'Hour', count(*) as 'Checkouts and Renews' 
 FROM statistics
 WHERE datetime BETWEEN <<Starting date|date>> AND <<Ending date|date>>
  AND branch=<<Choose your library|branches>>
@@ -292,7 +292,7 @@ GROUP BY date_format(`datetime`,'%H')
 <h4><span class="mw-headline" id="Titles_with_holds">Titles with holds</span></h4>
 <p>Notes: Gives a complete list of bibs with holds including the title, number of holds, and number of items associated with each bib.
 </p>
-<pre class="language-SQL">SELECT biblio.biblionumber, biblio.title, biblio.author, authorised_values.lib as collection, count(DISTINCT reserves.borrowernumber) as reservecount, count(DISTINCT items.itemnumber) as itemcount
+<pre class="language-sql">SELECT biblio.biblionumber, biblio.title, biblio.author, authorised_values.lib as collection, count(DISTINCT reserves.borrowernumber) as reservecount, count(DISTINCT items.itemnumber) as itemcount
 FROM reserves
 LEFT JOIN items ON items.biblionumber=reserves.biblionumber 
 LEFT JOIN biblio ON reserves.biblionumber=biblio.biblionumber
@@ -303,7 +303,7 @@ ORDER BY reservecount DESC
 <h4><span class="mw-headline" id="Top_10_Circulating_Items_by_Shelf_Location">Top 10 Circulating Items by Shelf Location</span></h4>
 <p>Notes: Reports the 10 most circulated items in a shelf location in a date range.
 </p>
-<pre class="language-SQL">SELECT count(o.issuedate) AS circs, CONCAT('<a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',b.biblionumber,'\">',title,'</a>') AS Title, b.author
+<pre class="language-sql">SELECT count(o.issuedate) AS circs, CONCAT('<a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',b.biblionumber,'\">',title,'</a>') AS Title, b.author
 FROM old_issues o
 LEFT JOIN items i ON (i.itemnumber=o.itemnumber) 
 LEFT JOIN biblio b ON (b.biblionumber=i.biblionumber) 
@@ -320,7 +320,7 @@ LIMIT 10
 <h4><span class="mw-headline" id="Age_stats_from_call.23_range">Age stats from call# range</span></h4>
 <p>Notes: Shows the average age of the books in a call range based on publication dates. Useful for weeding and collection development.
 </p>
-<pre class="language-SQL">SELECT AVG(copyrightdate)
+<pre class="language-sql">SELECT AVG(copyrightdate)
 FROM biblio
 LEFT JOIN items ON biblio.biblionumber=items.biblionumber 
 WHERE items.itemcallnumber BETWEEN <<starting call number>> AND <<ending call number>>
@@ -330,7 +330,7 @@ WHERE items.itemcallnumber BETWEEN <<starting call number>> AND <<ending call nu
 <h4><span class="mw-headline" id="Items_with_subject_of_.27Christian_Fiction.27">Items with subject of 'Christian Fiction'</span></h4>
 <p>Notes: Finds all items associated with records that have a 650a of Christian Fiction. Useful for breaking a collection into a new shelf location.
 </p>
-<pre class="language-SQL">SELECT items.barcode, items.itemcallnumber, items.location, biblio.title, biblio.author, ExtractValue( biblioitems.marcxml, '//datafield[@tag="650"]/subfield[@code="a"]' ) AS 'lcsh'
+<pre class="language-sql">SELECT items.barcode, items.itemcallnumber, items.location, biblio.title, biblio.author, ExtractValue( biblioitems.marcxml, '//datafield[@tag="650"]/subfield[@code="a"]' ) AS 'lcsh'
 FROM biblioitems
 JOIN biblio ON ( biblioitems.biblionumber = biblio.biblionumber )
 JOIN items ON ( biblioitems.biblionumber = items.biblionumber )
@@ -340,7 +340,7 @@ WHERE items.homebranch = <<Library|branches>>
 <h4><span class="mw-headline" id="Items_with_subject_of_.27Graphic_Novel.27">Items with subject of 'Graphic Novel'</span></h4>
 <p>Notes: Finds all items associated with records that have a 650a of Graphic Novel. Useful for breaking a collection into a new shelf location.
 </p>
-<pre class="language-SQL">SELECT items.itemcallnumber, biblio.biblionumber, biblio.title, biblio.author, ExtractValue( biblioitems.marcxml, '//datafield[@tag="650"]/subfield[@code="a"]' ) AS 'lcsh'
+<pre class="language-sql">SELECT items.itemcallnumber, biblio.biblionumber, biblio.title, biblio.author, ExtractValue( biblioitems.marcxml, '//datafield[@tag="650"]/subfield[@code="a"]' ) AS 'lcsh'
 FROM biblioitems
 JOIN biblio ON ( biblioitems.biblionumber = biblio.biblionumber )
 JOIN items ON ( biblioitems.biblionumber = items.biblionumber )
@@ -350,7 +350,7 @@ WHERE items.homebranch = <<Library|branches>>
 <h4><span class="mw-headline" id="Link_tracker">Link tracker</span></h4>
 <p>Notes: Counts how many times each 856u is clicked
 </p>
-<pre class="language-SQL">SELECT  MAX(timeclicked) AS 'Most Recent Click', url, COUNT(*) as Clicks
+<pre class="language-sql">SELECT  MAX(timeclicked) AS 'Most Recent Click', url, COUNT(*) as Clicks
 FROM linktracker
 GROUP BY url
 ORDER BY MAX(timeclicked)
@@ -359,7 +359,7 @@ ORDER BY MAX(timeclicked)
 <h4><span class="mw-headline" id="Bad_Cataloging">Bad Cataloging</span></h4>
 <p>Notes: Runs comparisons on various authorized values to locate miscataloged items
 </p>
-<pre class="language-SQL">SELECT i.barcode, b.title, i.ccode, a.lib, i.homebranch, i.dateaccessioned, i.booksellerid AS Whodunnit
+<pre class="language-sql">SELECT i.barcode, b.title, i.ccode, a.lib, i.homebranch, i.dateaccessioned, i.booksellerid AS Whodunnit
 FROM items i
 LEFT JOIN biblio b ON i.biblionumber=b.biblionumber
 LEFT JOIN authorised_values a ON i.location=a.authorised_value
@@ -385,7 +385,7 @@ ORDER BY a.lib
 <h4><span class="mw-headline" id="Bibs_added_in_a_time_frame">Bibs added in a time frame</span></h4>
 <p>Notes: Pulls all bibs created within a selected window of time
 </p>
-<pre class="language-SQL">SELECT b.biblionumber, b.title, b.author, ExtractValue(marcxml,'//datafield[@tag="300"]/subfield[@code>="a"]') AS Description,  b.datecreated, b.timestamp
+<pre class="language-sql">SELECT b.biblionumber, b.title, b.author, ExtractValue(marcxml,'//datafield[@tag="300"]/subfield[@code>="a"]') AS Description,  b.datecreated, b.timestamp
 FROM biblioitems bi
 LEFT JOIN biblio b on (bi.biblionumber=b.biblionumber) 
 WHERE b.datecreated BETWEEN <<Between|date>> AND <<and|date>> 
@@ -394,7 +394,7 @@ ORDER BY b.datecreated ASC
 <h4><span class="mw-headline" id="Bibs_with_duplicate_ISBNs">Bibs with duplicate ISBNs</span></h4>
 <p>Notes: Finds cases where multiple records have the same ISBN and links to a search for them. Used to find records to merge.
 </p>
-<pre class="language-SQL">SELECT CONCAT('<a href=\"/cgi-bin/koha/catalogue/search.pl?q=',isbn,'\" target="_blank">',isbn,'</a>') AS 'ISBN Search', COUNT(*) AS 'No. of Matching Records'
+<pre class="language-sql">SELECT CONCAT('<a href=\"/cgi-bin/koha/catalogue/search.pl?q=',isbn,'\" target="_blank">',isbn,'</a>') AS 'ISBN Search', COUNT(*) AS 'No. of Matching Records'
 FROM biblioitems
 GROUP BY isbn
 HAVING COUNT(*) > 1
@@ -402,7 +402,7 @@ HAVING COUNT(*) > 1
 <h4><span class="mw-headline" id="Bibs_with_many_items">Bibs with many items</span></h4>
 <p>Notes: Finds bibs with more than X amount of items. Useful for finding records that are bogged down, esp. periodicals.
 </p>
-<pre class="language-SQL">SELECT biblio.biblionumber, title, author, count(*)
+<pre class="language-sql">SELECT biblio.biblionumber, title, author, count(*)
 FROM items, biblio
 WHERE biblio.biblionumber=items.biblionumber
 GROUP BY biblio.biblionumber having count(*) > <<# of items/bib>>
@@ -411,7 +411,7 @@ ORDER BY count(*) DESC
 <h4><span class="mw-headline" id="Deleted_items_for_specific_bib">Deleted items for specific bib</span></h4>
 <p>Notes: Useful for re-adding items that accidentally get deleted
 </p>
-<pre class="language-SQL">SELECT *
+<pre class="language-sql">SELECT *
 FROM deleteditems
 LEFT JOIN biblio USING (biblionumber)
 WHERE biblionumber = <<Enter Bib Number>>
@@ -419,14 +419,14 @@ WHERE biblionumber = <<Enter Bib Number>>
 <h4><span class="mw-headline" id="Empty_bibs">Empty bibs</span></h4>
 <p>Notes: Bibs without items attached
 </p>
-<pre class="language-SQL">SELECT biblionumber, title, datecreated 
+<pre class="language-sql">SELECT biblionumber, title, datecreated 
 FROM biblio 
 WHERE biblionumber NOT IN (SELECT biblionumber FROM items)
 </pre>
 <h4><span class="mw-headline" id="Items_without_replacement_prices_filtered_on_shelf_location">Items without replacement prices filtered on shelf location</span></h4>
 <p>Notes: Pulls any legacy data from the 541 field to speed up cleanup
 </p>
-<pre class="language-SQL">SELECT i.barcode, i.itemcallnumber, b.author, b.title, i.replacementprice, ExtractValue(bi.marcxml, "//datafield[@tag='541']/subfield[@code='a']" ) AS 'Source', ExtractValue(bi.marcxml, "//datafield[@tag='541']/subfield[@code='d']" ) AS 'Date', ExtractValue(bi.marcxml, "//datafield[@tag='541']/subfield[@code='f']" ) AS 'Owner', ExtractValue(bi.marcxml, "//datafield[@tag='541']/subfield[@code='h']" ) AS 'Purchase Price'
+<pre class="language-sql">SELECT i.barcode, i.itemcallnumber, b.author, b.title, i.replacementprice, ExtractValue(bi.marcxml, "//datafield[@tag='541']/subfield[@code='a']" ) AS 'Source', ExtractValue(bi.marcxml, "//datafield[@tag='541']/subfield[@code='d']" ) AS 'Date', ExtractValue(bi.marcxml, "//datafield[@tag='541']/subfield[@code='f']" ) AS 'Owner', ExtractValue(bi.marcxml, "//datafield[@tag='541']/subfield[@code='h']" ) AS 'Purchase Price'
 FROM items i
 LEFT JOIN biblio b ON (i.biblionumber=b.biblionumber)
 LEFT JOIN biblioitems bi ON (i.biblionumber=bi.biblionumber)
@@ -441,7 +441,7 @@ ORDER BY i.itemcallnumber
 <h4><span class="mw-headline" id="Multi-null_report_-_hyperlinked">Multi-null report - hyperlinked</span></h4>
 <p>Notes: Checks for null shelf locations, itypes, ccodes and barcodes
 </p>
-<pre class="language-SQL">SELECT  CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.homebranch, items.holdingbranch, items.itemcallnumber, items.location, items.ccode, items.itype,  CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
+<pre class="language-sql">SELECT  CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.homebranch, items.holdingbranch, items.itemcallnumber, items.location, items.ccode, items.itype,  CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
 FROM items  
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
 LEFT JOIN biblio on (biblioitems.biblionumber=biblio.biblionumber)   
@@ -453,7 +453,7 @@ ORDER BY items.homebranch
 <h4><span class="mw-headline" id="RDA_Framework_Check">RDA Framework Check</span></h4>
 <p>Notes: Finds records with RDA conventions that aren't in the RDA framework
 </p>
-<pre class="language-SQL">SELECT CONCAT('<a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',biblio.biblionumber,'</a>') AS biblionumber, items.barcode, items.homebranch, ExtractValue(marcxml, '//datafield[@tag="260"]/subfield[@code="c"]') AS '260c', ExtractValue(marcxml, '//datafield[@tag="264"]/subfield[@code="c"]') AS '264c', biblio.frameworkcode, items.dateaccessioned
+<pre class="language-sql">SELECT CONCAT('<a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',biblio.biblionumber,'</a>') AS biblionumber, items.barcode, items.homebranch, ExtractValue(marcxml, '//datafield[@tag="260"]/subfield[@code="c"]') AS '260c', ExtractValue(marcxml, '//datafield[@tag="264"]/subfield[@code="c"]') AS '264c', biblio.frameworkcode, items.dateaccessioned
 FROM biblioitems
 JOIN biblio USING (biblionumber)
 JOIN items USING (biblionumber)
@@ -464,7 +464,7 @@ WHERE biblio.frameworkcode <> 'RDA'
 <h4><span class="mw-headline" id="Items_not_scanned_in_a_shelf_location">Items not scanned in a shelf location</span></h4>
 <p>Notes: Generates a list of everything that wasn't seen when scanning based on the date inventoried. Use to search for missing items.
 </p>
-<pre class="language-SQL">SELECT i.itemcallnumber, b.title, b.author, i.barcode, datelastseen, a.lib, i.onloan
+<pre class="language-sql">SELECT i.itemcallnumber, b.title, b.author, i.barcode, datelastseen, a.lib, i.onloan
 FROM biblio b
 LEFT JOIN items i USING (biblionumber)
 LEFT JOIN issues c ON (i.itemnumber=c.itemnumber) 
@@ -481,7 +481,7 @@ ORDER BY onloan DESC, i.itemcallnumber ASC
 <h4><span class="mw-headline" id="Items_not_scanned">Items not scanned</span></h4>
 <p>Notes: Generates a complete list of items not scanned during inventory, best run at the very end using the inital start date.
 </p>
-<pre class="language-SQL">SELECT i.itemcallnumber, b.title, i.barcode, datelastseen, a.lib
+<pre class="language-sql">SELECT i.itemcallnumber, b.title, i.barcode, datelastseen, a.lib
 FROM biblio b
 LEFT JOIN items i USING (biblionumber)
 LEFT JOIN issues c ON (i.itemnumber=c.itemnumber) 
@@ -497,7 +497,7 @@ ORDER BY onloan DESC, i.itemcallnumber ASC
 <h4><span class="mw-headline" id="0000-00-00:_Find_Upload_Problems">0000-00-00: Find Upload Problems</span></h4>
 <p>Notes: Checks to see if files were uploaded correctly. If there are items on this report, not everything got 'Marked seen'. The file will need re-uploaded. Be sure to <b>Show All</b> then <b>Select All</b> then <b>Mark seen and quit</b>.
 </p>
-<pre class="language-SQL">SELECT i.barcode, b.title, b.author, i.itemcallnumber, i.datelastseen, i.timestamp, i.itemlost
+<pre class="language-sql">SELECT i.barcode, b.title, b.author, i.itemcallnumber, i.datelastseen, i.timestamp, i.itemlost
 FROM items i
 LEFT JOIN biblio b USING (biblionumber)
 WHERE i.datelastseen = '00000000'
@@ -508,7 +508,7 @@ ORDER BY i.itemcallnumber
 <h4><span class="mw-headline" id="Long_overdues_AT_other_libraries">Long overdues AT other libraries</span></h4>
 <p>Notes: Overdue items that are owned by your library, but checked out elsewhere. Enter your library twice. Suggested action: check your shelf, check in if found; if not found, work with "Checked out at" library
 </p>
-<pre class="language-SQL">SELECT items.barcode, biblio.title, items.itemcallnumber, items.homebranch AS "Owned by", issues.date_due, items.holdingbranch AS "Checked out at" 
+<pre class="language-sql">SELECT items.barcode, biblio.title, items.itemcallnumber, items.homebranch AS "Owned by", issues.date_due, items.holdingbranch AS "Checked out at" 
 FROM items 
 LEFT JOIN  biblio on(items.biblionumber=biblio.biblionumber) 
 LEFT JOIN  issues on(items.itemnumber=issues.itemnumber) 
@@ -523,7 +523,7 @@ ORDER BY  items.holdingbranch
 <h4><span class="mw-headline" id="Long_overdues_FROM_other_libraries">Long overdues FROM other libraries</span></h4>
 <p>Notes: Overdue items that are owned by someone else, but checked out by your patron. Enter your library twice. Suggested action: check your shelves, check in if found; if not found, pursue patron
 </p>
-<pre class="language-SQL">SELECT borrowers.cardnumber,  borrowers.firstname,  borrowers.surname,  borrowers.phone,  borrowers.email, items.barcode, biblio.title, items.itemcallnumber, items.homebranch AS "Owned by", issues.date_due, items.holdingbranch AS "Checked out at" 
+<pre class="language-sql">SELECT borrowers.cardnumber,  borrowers.firstname,  borrowers.surname,  borrowers.phone,  borrowers.email, items.barcode, biblio.title, items.itemcallnumber, items.homebranch AS "Owned by", issues.date_due, items.holdingbranch AS "Checked out at" 
 FROM items 
 LEFT JOIN  biblio on(items.biblionumber=biblio.biblionumber) 
 LEFT JOIN  issues on(items.itemnumber=issues.itemnumber) 
@@ -539,7 +539,7 @@ ORDER BY  items.homebranch
 <h4><span class="mw-headline" id="Lost_items_AT_other_libraries">Lost items AT other libraries</span></h4>
 <p>Notes: Items that were marked lost with a holding location different than the home location. Suggested action: Determine if the item was paid for. If yes, delete. If no, pursue.
 </p>
-<pre class="language-SQL">SELECT items.itemnumber, biblio.title, biblio.author, items.itemcallnumber, items.barcode, authorised_values.lib , items.homebranch, items.holdingbranch
+<pre class="language-sql">SELECT items.itemnumber, biblio.title, biblio.author, items.itemcallnumber, items.barcode, authorised_values.lib , items.homebranch, items.holdingbranch
 FROM items 
 LEFT JOIN biblio ON (items.biblionumber=biblio.biblionumber) 
 LEFT JOIN authorised_values ON (items.itemlost=authorised_values.authorised_value) 
@@ -551,7 +551,7 @@ ORDER BY items.holdingbranch
 <h4><span class="mw-headline" id="Missing_call_number">Missing call number</span></h4>
 <p>Notes: Items at a specified library without call numbers Suggested action: Add the appropriate call number to these items.
 </p>
-<pre class="language-SQL">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
+<pre class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
 FROM items  
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
 LEFT JOIN biblio on (biblioitems.biblionumber=biblio.biblionumber)   
@@ -562,7 +562,7 @@ ORDER BY items.itemcallnumber
 <h4><span class="mw-headline" id="Missing_collection_code">Missing collection code</span></h4>
 <p>Notes: Items at a specified library missing a collection code Suggested action: add the appropriate collection code to these items
 </p>
-<pre class="language-SQL">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.ccode, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
+<pre class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.ccode, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
 FROM items  
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
 LEFT JOIN biblio on (biblioitems.biblionumber=biblio.biblionumber)   
@@ -573,7 +573,7 @@ ORDER BY items.itemcallnumber
 <h4><span class="mw-headline" id="Missing_item_type">Missing item type</span></h4>
 <p>Notes: Items at a specified library missing an item type Suggested action: add the appropriate item type
 </p>
-<pre class="language-SQL">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.itype, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
+<pre class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.itype, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
 FROM items  
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
 LEFT JOIN biblio on (biblioitems.biblionumber=biblio.biblionumber)   
@@ -584,7 +584,7 @@ ORDER BY items.itemcallnumber
 <h4><span class="mw-headline" id="Missing_shelf_location">Missing shelf location</span></h4>
 <p>Notes: Items at a specified library missing a shelf location Suggested action: add the appropriate shelf location
 </p>
-<pre class="language-SQL">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.location, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
+<pre class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.location, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
 FROM items  
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
 LEFT JOIN biblio on (biblioitems.biblionumber=biblio.biblionumber)   
@@ -595,7 +595,7 @@ ORDER BY items.itemcallnumber
 <h4><span class="mw-headline" id="Old_holds">Old holds</span></h4>
 <p>Notes: Holds placed XX months ago or more Suggested action: follow-up with patron and/or delete/re-fill the hold
 </p>
-<pre class="language-SQL">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',p.borrowernumber,'\">',p.borrowernumber,'</a>') AS 'Link to Patron', p.cardnumber, p.firstname, p.surname, r.reservedate, b.title
+<pre class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',p.borrowernumber,'\">',p.borrowernumber,'</a>') AS 'Link to Patron', p.cardnumber, p.firstname, p.surname, r.reservedate, b.title
 FROM reserves r
  LEFT JOIN borrowers p USING (borrowernumber)
  LEFT JOIN biblio b USING (biblionumber)
@@ -606,7 +606,7 @@ ORDER BY r.reservedate
 <h4><span class="mw-headline" id="Transfers_FROM_your_library">Transfers FROM your library</span></h4>
 <p>Notes: Transfers being sent from your library that have not arrived yet Suggested action: Check your shelves, check in if found; if not found, follow up with tobranch
 </p>
-<pre class="language-SQL">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author, items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
+<pre class="language-sql">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author, items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
 FROM branchtransfers as b
 LEFT JOIN items on (b.itemnumber = items.itemnumber)
 LEFT JOIN biblioitems on (biblioitems.biblioitemnumber = items.biblioitemnumber)
@@ -620,7 +620,7 @@ ORDER BY dayslate DESC
 <h4><span class="mw-headline" id="Transfers_TO_your_library">Transfers TO your library</span></h4>
 <p>Notes: Transfers being sent to your library that have not arrived yet Suggested action: Check your shelves, check in if found; if not found, follow up with the frombranch
 </p>
-<pre class="language-SQL">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author, items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
+<pre class="language-sql">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author, items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
 FROM branchtransfers as b
 LEFT JOIN items on (b.itemnumber = items.itemnumber)
 LEFT JOIN biblioitems on (biblioitems.biblioitemnumber = items.biblioitemnumber)
@@ -635,7 +635,7 @@ ORDER BY dayslate DESC
 <h4><span class="mw-headline" id="Patrons_without_cardnumber">Patrons without cardnumber</span></h4>
 <p>Notes: Finds patrons with blank cardnumbers, useful for self-registration cleanup.
 </p>
-<pre class="language-SQL">SELECT surname as 'Surname', firstname as 'First Name', dateexpiry as 'Expiry Date', branchcode as 'Library' 
+<pre class="language-sql">SELECT surname as 'Surname', firstname as 'First Name', dateexpiry as 'Expiry Date', branchcode as 'Library' 
 FROM borrowers 
 WHERE (cardnumber = <i> OR cardnumber IS NULL)  </i>
 ORDER BY branchcode, surname asc
@@ -644,7 +644,7 @@ LIMIT 100
 <h4><span class="mw-headline" id="Patrons_added_in_date_range">Patrons added in date range</span></h4>
 <p>Notes: Counts patrons added in date range at selected library.
 </p>
-<pre class="language-SQL">SELECT categorycode, COUNT(branchcode) as 'New Patrons Added' 
+<pre class="language-sql">SELECT categorycode, COUNT(branchcode) as 'New Patrons Added' 
 FROM borrowers 
 WHERE borrowers.dateenrolled BETWEEN <<Patrons added between|date>> AND <<and|date>>
  AND borrowers.branchcode=<<Your branch|branches>>
@@ -654,7 +654,7 @@ GROUP BY branchcode, categorycode
 <h4><span class="mw-headline" id="Yearly_circulation_stats_by_collection_code">Yearly circulation stats by collection code</span></h4>
 <p>Notes: Gives total checkouts + renewals in a year, broken down by ccode, with a grand total at the end.
 </p>
-<pre class="language-SQL">SELECT a.lib AS 'Collection Code', COUNT(1) AS 'Circs'
+<pre class="language-sql">SELECT a.lib AS 'Collection Code', COUNT(1) AS 'Circs'
 FROM statistics s
 LEFT JOIN items i ON s.itemnumber=i.itemnumber
 LEFT JOIN authorised_values a ON i.ccode=a.authorised_value
@@ -672,7 +672,7 @@ WHERE YEAR(datetime) = <<Enter Year Again (YYYY)>>
 <h4><span class="mw-headline" id="Patron_count_by_patron_category">Patron count by patron category</span></h4>
 <p>Notes: Totals number of patrons in each category at a selected library with a grand total at the end.
 </p>
-<pre class="language-SQL">SELECT c.description AS 'Patron Category', COUNT(*)
+<pre class="language-sql">SELECT c.description AS 'Patron Category', COUNT(*)
 FROM borrowers b
 LEFT JOIN categories c ON (b.categorycode = c.categorycode)
 WHERE b.branchcode = <<Choose Library|branches>>
@@ -685,7 +685,7 @@ WHERE branchcode = <<Choose Library Again|branches>>
 <h4><span class="mw-headline" id="Item_count_by_collection_code">Item count by collection code</span></h4>
 <p>Notes: Gives total number of items in each collection code with a grand total at the end.
 </p>
-<pre class="language-SQL">SELECT authorised_values.lib AS 'Collection Code', COUNT(1) AS Count
+<pre class="language-sql">SELECT authorised_values.lib AS 'Collection Code', COUNT(1) AS Count
 FROM items
 LEFT JOIN authorised_values ON (items.ccode=authorised_values.authorised_value)
 WHERE items.homebranch = <<Choose Library|branches>>
@@ -698,7 +698,7 @@ WHERE homebranch = <<Choose Library|branches>>
 <h4><span class="mw-headline" id="Item_count_by_shelf_location">Item count by shelf location</span></h4>
 <p>Notes: Gives total number of items in each shelf location with a grand total at the end.
 </p>
-<pre class="language-SQL">SELECT authorised_values.lib AS 'Shelving Location', COUNT(1) AS Count
+<pre class="language-sql">SELECT authorised_values.lib AS 'Shelving Location', COUNT(1) AS Count
 FROM items
 LEFT JOIN authorised_values ON (items.location=authorised_values.authorised_value)
 WHERE items.homebranch = <<Choose Library|branches>>
@@ -712,7 +712,7 @@ LIMIT 100
 <h4><span class="mw-headline" id="Loans_to_libraries_outside_the_consortium">Loans to libraries outside the consortium</span></h4>
 <p>Notes: Counts checkouts to patrons with the ILL category
 </p>
-<pre class="language-SQL">SELECT COUNT(*) AS 'Loans'
+<pre class="language-sql">SELECT COUNT(*) AS 'Loans'
 FROM statistics s
 JOIN borrowers b USING (borrowernumber) 
 WHERE b.categorycode = 'ILL'
@@ -723,7 +723,7 @@ WHERE b.categorycode = 'ILL'
 <h4><span class="mw-headline" id="Borrows_from_libraries_outside_the_consortium">Borrows from libraries outside the consortium</span></h4>
 <p>Notes: Counts checkouts of ILL cards used to circulate non-consortium items to consortium patrons
 </p>
-<pre class="language-SQL">SELECT COUNT(*) AS 'Borrows'
+<pre class="language-sql">SELECT COUNT(*) AS 'Borrows'
 FROM statistics s
 JOIN items i USING (itemnumber) 
 WHERE i.ccode = 'ILL'
@@ -734,7 +734,7 @@ WHERE i.ccode = 'ILL'
 <h4><span class="mw-headline" id="Circulation_of_Juv.2FYA_materials_in_given_year">Circulation of Juv/YA materials in given year</span></h4>
 <p>Notes: Sums circs for each shelf location with a grand total at the end.
 </p>
-<pre class="language-SQL">SELECT COALESCE(a.lib, 'TOTAL') AS 'Shelf Location',  COUNT(*) AS 'Circs' 
+<pre class="language-sql">SELECT COALESCE(a.lib, 'TOTAL') AS 'Shelf Location',  COUNT(*) AS 'Circs' 
 FROM statistics s
 LEFT JOIN items i ON (s.itemnumber=i.itemnumber)
 LEFT JOIN authorised_values a ON (i.location=a.authorised_value)
