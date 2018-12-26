@@ -35,8 +35,9 @@
 						<p style="color:red;font-weight:bold;">Suggested action: Check your shelves for these items!</p>
 					</div>	
 			<h3><span class="mw-headline" id="Parameters">Parameters</span></h3>
+				<p>Parameters allow users to make choices about what info the report retrieves</p>
 				<p>Parameter formatting: &lt;&lt;Descriptive text|parameter&gt;&gt;</p>
-				<p>A brief list of parameters we use:</p>
+				<pVanilla Koha parameters:</p>
 				<ul>
 					<li>Library/Branch: branches</li>
 					<li>Shelf Location: LOC</li>
@@ -394,14 +395,6 @@ WHERE datelastseen &lt; &lt;&lt;Date you started inventory/Date last seen before
 	AND a.category='LOST'
 GROUP BY i.itemnumber
 ORDER BY onloan DESC, i.itemcallnumber ASC</code></pre>
-				<h4><span class="mw-headline" id="0000-00-00:_Find_Upload_Problems">0000-00-00: Find Upload Problems</span></h4>
-				<p>Notes: Checks to see if files were uploaded correctly. If there are items on this report, not everything got 'Marked seen'. The file will need re-uploaded. Be sure to <b>Show All</b> then <b>Select All</b> then <b>Mark seen and quit</b>.</p>
-				<pre><code class="language-sql">SELECT i.barcode, b.title, b.author, i.itemcallnumber, i.datelastseen, i.timestamp, i.itemlost
-FROM items i
-LEFT JOIN biblio b USING (biblionumber)
-WHERE i.datelastseen = '00000000'
-	AND i.homebranch = &lt;&lt;Library|branches&gt;&gt;
-ORDER BY i.itemcallnumber</code></pre>
 			<h3><span class="mw-headline" id="Monthly">Monthly</span></h3>
 				<h4><span class="mw-headline" id="Long_overdues_AT_other_libraries">Long overdues AT other libraries</span></h4>
 				<p>Notes: Overdue items that are owned by your library, but checked out elsewhere. Enter your library twice. Suggested action: check your shelf, check in if found; if not found, work with "Checked out at" library</p>
