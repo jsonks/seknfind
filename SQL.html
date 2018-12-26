@@ -430,8 +430,7 @@ WHERE  items.homebranch != &lt;&lt;Select Your Library|branches&gt;&gt;
 	AND  issues.date_due is not NULL 
 	AND  issues.date_due &lt; DATE_SUB(curdate(), INTERVAL '99' DAY)  
 ORDER BY  items.homebranch</code></pre>
-				<h4><span class="mw-headline" id="Lost_items_AT_other_libraries">
-				s AT other libraries</span></h4>
+				<h4><span class="mw-headline" id="Lost_items_AT_other_libraries">Lost items AT other libraries</span></h4>
 				<p>Notes: Items that were marked lost with a holding location different than the home location. Suggested action: Determine if the item was paid for. If yes, delete. If no, pursue.</p>
 				<pre><code class="language-sql">SELECT items.itemnumber, biblio.title, biblio.author, items.itemcallnumber, items.barcode, authorised_values.lib , items.homebranch, items.holdingbranch
 FROM items 
