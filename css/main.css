@@ -29,6 +29,7 @@ h1 {
     line-height: 46px;
     font-size: 43px;
     margin: 0 0 23px 0;
+    letter-spacing: 10px;
     }
 h2 {
     font-family: 'Cantarell', sans-serif;
@@ -36,7 +37,16 @@ h2 {
     font-size: 20px;
     line-height: 23px;
     text-transform: uppercase;
-    letter-spacing: -1px;
+    letter-spacing: 5px;
+    margin: 0 0 23px 0;
+    }
+h3 {
+    font-family: 'Cantarell', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 23px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     margin: 0 0 23px 0;
     }
 p {
