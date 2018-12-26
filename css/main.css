@@ -27,7 +27,7 @@ nav.page-navigation {
     position: fixed;
     top:14%;
     left:0;
-    background:rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.05);
 }
 nav.page-navigation ul {
     margin: 0;
