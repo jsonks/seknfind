@@ -169,7 +169,8 @@ WHERE items.itype = &lt;&lt;Item Type|itemtypes&gt;&gt;</code></pre>
 				<h4><span id="Contents_of_a_Shelf_Location">Contents of a Shelf Location</span></h4>
 				<p> Lists ALL items in a shelf location, may be dangerous on high use categories</p>
 				<pre><code class="language-sql">SELECT  items.barcode, items.homebranch, items.holdingbranch, items.location, items.ccode, items.itype,
-items.itemcallnumber, biblioitems.itemtype, biblio.author, biblio.title, items.itemlost, ExtractValue(marcxml,'//datafield[@tag="300"]/subfield[@code>="a"]') AS Description
+items.itemcallnumber, biblioitems.itemtype, biblio.author, biblio.title, items.itemlost,
+ExtractValue(marcxml,'//datafield[@tag="300"]/subfield[@code>="a"]') AS Description
 FROM items
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber)
 LEFT JOIN biblio on (biblioitems.biblionumber=biblio.biblionumber)
@@ -220,7 +221,8 @@ FROM items</code></pre>
 				<pre><code class="language-sql">SELECT CONCAT('&lt;a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\"&gt;',title,'&lt/a&gt;') AS Title,
 biblio.author, authorised_values.lib as 'Lost Code',
 CONCAT('&lt;a href=\"/cgi-bin/koha/catalogue/moredetail.pl?biblionumber=',biblio.biblionumber,'\"&gt;',barcode,'&lt;/a&gt;') AS Barcode,
-items.itemcallnumber,  items.datelastseen, items.price, items.homebranch as 'Library',  items.holdingbranch, items.itemnotes, items.issues as 'Checkouts'
+items.itemcallnumber,  items.datelastseen, items.price, items.homebranch as 'Library',  items.holdingbranch,
+items.itemnotes, items.issues as 'Checkouts'
 FROM items 
 LEFT JOIN biblio on (items.biblionumber = biblio.biblionumber)   
 LEFT JOIN authorised_values ON (items.itemlost=authorised_values.authorised_value) 
@@ -231,7 +233,8 @@ ORDER BY biblio.title asc</code></pre>
 				<h4><span id="Lost_report_.28no_links.29">Lost report (no links)</span></h4>
 				<p> Modified Items Lost report, includes call# & # of checkouts</p>
 				<pre><code class="language-sql">SELECT biblio.title, biblio.author, authorised_values.lib as 'Lost Code', items.barcode,  items.itemcallnumber,
-items.datelastseen, items.price, items.homebranch as 'Library',  items.holdingbranch, items.itemnotes, items.issues as 'Checkouts'
+items.datelastseen, items.price, items.homebranch as 'Library',  items.holdingbranch, items.itemnotes,
+items.issues as 'Checkouts'
 FROM items 
 LEFT JOIN biblio on (items.biblionumber = biblio.biblionumber)   
 LEFT JOIN authorised_values ON (items.itemlost=authorised_values.authorised_value) 
@@ -260,7 +263,8 @@ GROUP BY reserves.biblionumber
 ORDER BY reservecount DESC</code></pre>
 				<h4><span id="Top_10_Circulating_Items_by_Shelf_Location">Top 10 Circulating Items by Shelf Location</span></h4>
 				<p> Reports the 10 most circulated items in a shelf location in a date range.</p>
-				<pre><code class="language-sql">SELECT count(o.issuedate) AS circs, CONCAT('&lt;a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',b.biblionumber,'\"&gt;',title,'&lt;/a&gt;') AS Title, b.author
+				<pre><code class="language-sql">SELECT count(o.issuedate) AS circs,
+CONCAT('&lt;a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',b.biblionumber,'\"&gt;',title,'&lt;/a&gt;') AS Title, b.author
 FROM old_issues o
 LEFT JOIN items i ON (i.itemnumber=o.itemnumber) 
 LEFT JOIN biblio b ON (b.biblionumber=i.biblionumber) 
@@ -520,7 +524,8 @@ WHERE items.location IS NULL
 ORDER BY items.itemcallnumber</code></pre>
 				<h4><span id="Old_holds">Old holds</span></h4>
 				<p> Holds placed XX months ago or more</p>
-				<pre><code class="language-sql">SELECT CONCAT('&lt;a target="_blank" href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',p.borrowernumber,'\"&gt;',p.borrowernumber,'&lt;/a&gt;') AS 'Link to Patron', p.cardnumber, p.firstname, p.surname, r.reservedate, b.title
+				<pre><code class="language-sql">SELECT CONCAT('&lt;a target="_blank" href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',p.borrowernumber,'\"&gt;',p.borrowernumber,'&lt;/a&gt;') AS 'Link to Patron',
+p.cardnumber, p.firstname, p.surname, r.reservedate, b.title
 FROM reserves r
 LEFT JOIN borrowers p USING (borrowernumber)
 LEFT JOIN biblio b USING (biblionumber)
@@ -529,7 +534,8 @@ WHERE r.reservedate &lt; ADDDATE(NOW(), INTERVAL -&lt;&lt;Holds over (XX) months
 ORDER BY r.reservedate</code></pre>
 				<h4><span id="Transfers_FROM_your_library">Transfers FROM your library</span></h4>
 				<p> Transfers being sent from your library that have not arrived yet</p>
-				<pre><code class="language-sql">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author, items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
+				<pre><code class="language-sql">SELECT b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author,
+items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
 FROM branchtransfers as b
 LEFT JOIN items on (b.itemnumber = items.itemnumber)
 LEFT JOIN biblioitems on (biblioitems.biblioitemnumber = items.biblioitemnumber)
@@ -541,8 +547,8 @@ WHERE b.frombranch = &lt;&lt;Select your library|branches&gt;&gt;
 ORDER BY dayslate DESC</code></pre>
 				<h4><span id="Transfers_TO_your_library">Transfers TO your library</span></h4>
 				<p> Transfers being sent to your library that have not arrived yet</p>
-				<pre><code class="language-sql">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author, items.itemcallnumber,
-DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
+				<pre><code class="language-sql">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author,
+items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
 FROM branchtransfers as b
 LEFT JOIN items on (b.itemnumber = items.itemnumber)
 LEFT JOIN biblioitems on (biblioitems.biblioitemnumber = items.biblioitemnumber)
