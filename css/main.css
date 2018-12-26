@@ -77,6 +77,8 @@ h3 {
     text-transform: uppercase;
     letter-spacing: 2px;
     margin: 0 0 23px 0;
+	border-bottom: 1px solid;
+	padding-bottom: 5px;
     }
 h4 {
     font-family: 'Cantarell', sans-serif;
