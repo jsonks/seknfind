@@ -22,11 +22,13 @@ nav ul li, footer ul li {
     margin-right: 20px;
 }
 nav.page-navigation {
-    width: 80px;
+	font-size: 15px;
+    width: 196px;
     background-color: #ebebeb;
     position: fixed;
     top:10%;
     left:0;
+	color: #d2d2d2;
 }
 nav.page-navigation li {
     width: 100%;
@@ -34,6 +36,7 @@ nav.page-navigation li {
 nav.page-navigation a {
     padding: 0.6em 10%;
     width: 80%;
+	display: block;
 }
 nav.page-navigation .current a {
     background-color: #d2d2d2;
