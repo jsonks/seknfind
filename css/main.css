@@ -62,6 +62,15 @@ p {
     line-height: 23px;
     margin: 0 0 23px 0;
     }
+.rendered {
+	background-color: #eee;
+	color: black;
+	border-radius: 5px;
+	margin-bottom: 15px;
+	padding-left: 20px;
+	padding-top: 20px;
+	padding-bottom: 1px;
+}
 footer {
     border-top: 1px solid #d5d5d5;
     font-size: .8em;
