@@ -29,7 +29,7 @@
     			<li><a href="#Catalog">Catalog</a></li>
     			<li><a href="#Circulation">Circulation</a></li>
 			<li><a href="#Collection_Analysis">Collection Analysis</a></li>
-			<li><a href="#Database_Clean-Up">Database_Clean-Up</a></li>
+			<li><a href="#Database_Clean-Up">Database Clean-Up</a></li>
 			<li><a href="#Inventory">Inventory</a></li>
 			<li><a href="#Monthly">Monthly</a></li>
 			<li><a href="#Patrons">Patrons</a></li>
@@ -626,5 +626,14 @@ LIMIT 50</code></pre>
 		</ul>
 	</footer>
 	<script src="js/prism.js"></script>
+	<script src="js/jquery.combinedScroll.js"></script>
+	<script type="text/javascript">
+jQuery(document).ready(function($) {
+
+  // Hook up the current state to the nav bar
+  $('.page-navigation').onePageNav();
+  
+});
+</script>
 	</body>
 </html>
