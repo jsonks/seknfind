@@ -35,6 +35,10 @@ nav.page-navigation a {
     padding: 0.6em 10%;
     width: 80%;
 }
+nav.page-navigation .current a {
+    background-color: #d2d2d2;
+    color: #fff;
+}
 a {
     text-decoration: none;
     color: #88BDBC;
