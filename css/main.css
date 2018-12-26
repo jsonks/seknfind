@@ -29,6 +29,10 @@ nav.page-navigation {
     top:10%;
     left:0;
 }
+nav.page-navigation ul {
+    margin: 0;
+}
+
 nav.page-navigation li {
     width: 100%;
 }
