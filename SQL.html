@@ -450,7 +450,7 @@ WHERE items.itemcallnumber IS NULL
 	AND items.homebranch = &lt;&lt;Choose Library|branches&gt;&gt;
 ORDER BY items.itemcallnumber</code></pre>
 				<h4><span class="mw-headline" id="Missing_collection_code">Missing collection code</span></h4>
-				<p>Notes: Items at a specified library missing a collection code Suggested action: add the appropriate collection code to these items</p>
+				<p>Notes: Items at a specified library missing a collection code</p>
 				<pre><code class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.ccode, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
 FROM items  
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
@@ -459,9 +459,8 @@ WHERE items.ccode IS NULL
 	AND items.homebranch = &lt;&lt;Choose Library|branches&gt;&gt;
 ORDER BY items.itemcallnumber</code></pre>
 				<h4><span class="mw-headline" id="Missing_item_type">Missing item type</span></h4>
-				<p>Notes: Items at a specified library missing an item type Suggested action: add the appropriate item type</p>
-				<pre>
-					<code class="language-sql">	SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.itype, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
+				<p>Notes: Items at a specified library missing an item type</p>
+				<pre><code class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.itype, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
 FROM items  
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
 LEFT JOIN biblio on (biblioitems.biblionumber=biblio.biblionumber)   
@@ -469,7 +468,7 @@ WHERE items.itype IS NULL
 	AND items.homebranch = &lt;&lt;Choose Library|branches&gt;&gt;
 ORDER BY items.itemcallnumber</code></pre>
 				<h4><span class="mw-headline" id="Missing_shelf_location">Missing shelf location</span></h4>
-				<p>Notes: Items at a specified library missing a shelf location Suggested action: add the appropriate shelf location</p>
+				<p>Notes: Items at a specified library missing a shelf location</p>
 				<pre><code class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',biblio.biblionumber,'&itemnumber=',items.itemnumber,'\">',barcode,'</a>') AS Barcode, items.itemcallnumber, items.location, CONCAT('<a target="_blank" href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',biblio.biblionumber,'\">',title,'</a>') AS Title, biblio.author 
 FROM items  
 LEFT JOIN biblioitems on (items.biblioitemnumber=biblioitems.biblioitemnumber) 
@@ -478,7 +477,7 @@ WHERE items.location IS NULL
 	AND items.homebranch = &lt;&lt;Choose Library|branches&gt;&gt;
 ORDER BY items.itemcallnumber</code></pre>
 				<h4><span class="mw-headline" id="Old_holds">Old holds</span></h4>
-				<p>Notes: Holds placed XX months ago or more Suggested action: follow-up with patron and/or delete/re-fill the hold</p>
+				<p>Notes: Holds placed XX months ago or more</p>
 				<pre><code class="language-sql">SELECT CONCAT('<a target="_blank" href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',p.borrowernumber,'\">',p.borrowernumber,'</a>') AS 'Link to Patron', p.cardnumber, p.firstname, p.surname, r.reservedate, b.title
 FROM reserves r
 LEFT JOIN borrowers p USING (borrowernumber)
@@ -487,7 +486,7 @@ WHERE r.reservedate &lt; ADDDATE(NOW(), INTERVAL -&lt;&lt;Holds over (XX) months
 	AND r.branchcode = &lt;&lt;Select your library|branches&gt;&gt;     
 ORDER BY r.reservedate</code></pre>
 				<h4><span class="mw-headline" id="Transfers_FROM_your_library">Transfers FROM your library</span></h4>
-				<p>Notes: Transfers being sent from your library that have not arrived yet Suggested action: Check your shelves, check in if found; if not found, follow up with tobranch</p>
+				<p>Notes: Transfers being sent from your library that have not arrived yet</p>
 				<pre><code class="language-sql">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author, items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
 FROM branchtransfers as b
 LEFT JOIN items on (b.itemnumber = items.itemnumber)
@@ -499,7 +498,7 @@ WHERE b.frombranch = &lt;&lt;Select your library|branches&gt;&gt;
 	AND DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 > '0'
 ORDER BY dayslate DESC</code></pre>
 				<h4><span class="mw-headline" id="Transfers_TO_your_library">Transfers TO your library</span></h4>
-				<p>Notes: Transfers being sent to your library that have not arrived yet Suggested action: Check your shelves, check in if found; if not found, follow up with the frombranch</p>
+				<p>Notes: Transfers being sent to your library that have not arrived yet</p>
 				<pre><code class="language-sql">SELECT  b.datesent, b.frombranch, b.tobranch, items.homebranch, items.barcode, biblio.title, biblio.author, items.itemcallnumber, DATEDIFF(b.datesent, (DATE_SUB(curdate(), INTERVAL 5 day)) ) * -1 as dayslate
 FROM branchtransfers as b
 LEFT JOIN items on (b.itemnumber = items.itemnumber)
