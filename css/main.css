@@ -1,6 +1,7 @@
 body {
     margin: 60px auto;
     font-family: 'Cantarell', sans-serif;
+    font-size: 17px;
     width: 70%;
     background-color: #88BDBC;
     background-image: linear-gradient(to top, #1e3c72 0%, #1e3c72 1%, #2a5298 100%);
