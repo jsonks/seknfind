@@ -42,11 +42,18 @@ h2 {
     }
 h3 {
     font-family: 'Cantarell', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
+    font-weight: 500;
+    font-size: 18px;
     line-height: 23px;
     text-transform: uppercase;
     letter-spacing: 2px;
+    margin: 0 0 23px 0;
+    }
+h4 {
+    font-family: 'Cantarell', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 23px;
     margin: 0 0 23px 0;
     }
 p {
