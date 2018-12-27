@@ -73,8 +73,19 @@
 			<p>An authorized value of % creates a wildcard which can be used as an 'ALL' search. These parameters must be queried with LIKE &lt;&lt;parameter&gt;&gt; instead of = &lt;&lt;parameter&gt;&gt;.
 		</div> <!--blurb-->
 		<div id="Recipes">
-		<h2><span id="Reports">Recipes</span></h2>
+		<h2>Recipes</h2>
 			<p>Random bits of SQL that can be used in various reports</p>
+			<h3><span id="select_links">SELECT Statement Links</span></h3>
+			<h4>View Bib Record</h4>
+			<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',items.biblionumber,'\" target="_blank"&gt;'"View"'&lt;/a&gt;') AS "view"</code></pre>
+			<h4>Edit Item Record</h4>
+			<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',b.biblionumber,'&itemnumber=',item.itemnumber,'\" target="_blank" &gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
+			<h4>View Patron Account</h4>
+			<pre><code class="language-sql">CONCAT ('&lt;a href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',b.borrowernumber,'\" target="_blank"&gt;',"View Account",'&lt;/a&gt;') AS "view"</code></pre>
+			<h4>Edit Patron Account</h4>
+			<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/members/memberentry.pl?op=modify&borrowernumber=',b.borrowernumber,'&step=1&guarantorid=',g.borrowernumber,'\" target="_blank"&gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
+			<h4>Edit Permissions</h4>
+			<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/members/member-flags.pl?member=',borrowernumber,'\" target="_blank"&gt;',"Edit",'&lt;/a&gt;') AS "link"</code></pre>
 		</div>
 		<div id="SQL_Reports_Library">
 		<h2><span id="Reports">Reports</span></h2>
