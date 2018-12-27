@@ -76,16 +76,55 @@
 		<h2>Recipes</h2>
 			<p>Random bits of SQL that can be used in various reports</p>
 			<h3><span id="select_links">SELECT Statement Links</span></h3>
-			<h4>View Bib Record</h4>
-			<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',items.biblionumber,'\" target="_blank"&gt;'"View"'&lt;/a&gt;') AS "view"</code></pre>
-			<h4>Edit Item Record</h4>
-			<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',b.biblionumber,'&itemnumber=',item.itemnumber,'\" target="_blank" &gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
-			<h4>View Patron Account</h4>
-			<pre><code class="language-sql">CONCAT ('&lt;a href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',b.borrowernumber,'\" target="_blank"&gt;',"View Account",'&lt;/a&gt;') AS "view"</code></pre>
-			<h4>Edit Patron Account</h4>
-			<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/members/memberentry.pl?op=modify&borrowernumber=',b.borrowernumber,'&step=1&guarantorid=',g.borrowernumber,'\" target="_blank"&gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
-			<h4>Edit Permissions</h4>
-			<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/members/member-flags.pl?member=',borrowernumber,'\" target="_blank"&gt;',"Edit",'&lt;/a&gt;') AS "link"</code></pre>
+				<h4>View Bib Record</h4>
+				<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',items.biblionumber,'\" target="_blank"&gt;'"View"'&lt;/a&gt;') AS "view"</code></pre>
+				<h4>Edit Item Record</h4>
+				<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',b.biblionumber,'&itemnumber=',item.itemnumber,'\" target="_blank" &gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
+				<h4>View Patron Account</h4>
+				<pre><code class="language-sql">CONCAT ('&lt;a href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',b.borrowernumber,'\" target="_blank"&gt;',"View Account",'&lt;/a&gt;') AS "view"</code></pre>
+				<h4>Edit Patron Account</h4>
+				<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/members/memberentry.pl?op=modify&borrowernumber=',b.borrowernumber,'&step=1&guarantorid=',g.borrowernumber,'\" target="_blank"&gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
+				<h4>Edit Permissions</h4>
+				<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/members/member-flags.pl?member=',borrowernumber,'\" target="_blank"&gt;',"Edit",'&lt;/a&gt;') AS "link"</code></pre>
+			<h3><span id="coalescence">Coalescence</span></h3>
+				<p>COALESCE can be used to fill in blanks from other tables. This is good for querying deleted tables alongside their active counterparts.</p>
+				<h4>Query collection codes from items & deleted items</h4>
+				<pre><code class="language-sql">SELECT COALESCE(items.ccode, deleteditems.ccode)</code></pre>
+			<h3><span id="date_range_picker">Date Range Picker</span></h3>
+				<h4>Date Range with Pop-up Calendars</h4>
+				<pre><code class="language-sql">WHERE date_due BETWEEN &lt;&lt;Between|date&gt;&gt; AND &lt;&lt;and|date&gt;&gt;</code></pre>
+			<h3><span id="visited_links">Indicate Clicked Links within Report</span></h3>
+				<p>Adding styles to the notes field, and a class within the SELECT statement link can help distinguish between links that have and haven't been clicked within a report. This is useful on clean-up reports where the links open in new tabs. You can click the link, then close the tab and not lose your place within the report.</p>
+				<h4>Add the style to the report notes field</h4>
+				<pre><code class="language-html">&lt;style&gt;
+.clicked:visited {
+     color:hotpink;
+ }
+ &lt;/style&gt;</code></pre>
+				<h4>Add a class to the link</h4>
+				<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',b.biblionumber,'&itemnumber=',item.itemnumber,'\" <b>class="clicked" target="_blank"</b> &gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
+			<h3><span id="sumcasewhen">SUM CASE WHEN</span></h3>
+				<p>Useful for categorizing multiple locations/ccodes/itypes together. For example, we have multiple YA shelf locations in two different AV ranges.</p>
+				<pre><code class="language-sql">SELECT SUM(CASE WHEN (i.location BETWEEN '101800YAFIC' AND '102100YAFICSF')
+	OR (i.location BETWEEN '121600YANFB' AND '121800YAREF') THEN 1 ELSE 0 END) as 'Young Adult Books'
+FROM items i</code></pre>
+			<h3><span id="in_transit_check">In Transit Check</span></h3>
+			<p>Checks whether the item is in transit and reports a 'yes' or 'no'.</p>
+				<pre><code class="language-sql">SELECT IF(MAX(bt.datesent)>COALESCE(MAX(bt.datearrived),0),'Yes','No') as inTransit
+FROM branchtransfers bt</code></pre>
+			<h3><span id="multiple_avs">Multiple Authorised Value Joins</span></h3>
+				<p>Allows for cleaner reports by pulling descriptions rather than raw codes for different categories.</p>
+				<pre><code class="language-sql">SELECT
+     a.lib AS 'lost',
+     a2.lib AS 'notloan',
+     a3.lib AS 'withdrawn',
+     a4.lib AS 'damaged',
+ FROM biblio b
+ LEFT JOIN items i USING (biblionumber)
+ LEFT JOIN authorised_values a ON (a.authorised_value=i.itemlost AND a.category='LOST')
+ LEFT JOIN authorised_values a2 ON (a2.authorised_value=i.notforloan AND a2.category='NOT_LOAN')
+ LEFT JOIN authorised_values a3 ON (a3.authorised_value=i.withdrawn AND a3.category='WITHDRAWN')
+ LEFT JOIN authorised_values a4 ON (a4.authorised_value=i.withdrawn AND a4.category='DAMAGED')</code></pre>			
 		</div>
 		<div id="SQL_Reports_Library">
 		<h2><span id="Reports">Reports</span></h2>
