@@ -642,14 +642,14 @@ FROM statistics s
 LEFT JOIN items i ON s.itemnumber=i.itemnumber
 LEFT JOIN authorised_values a ON i.ccode=a.authorised_value
 WHERE YEAR(s.datetime) = &lt;&lt;Enter year (YYYY)&gt;&gt;
-	AND s.branch = &lt;&lt;Select Library|branches&gt;&gt;
+	AND s.branch = &lt;&lt;Choose Library|branches&gt;&gt;
 	AND s.type IN ('issue', 'renew')
 GROUP BY a.lib
 UNION ALL
 SELECT 'TOTAL' ccode, COUNT(1) AS 'Circs'
 FROM statistics
-WHERE YEAR(datetime) = &lt;&lt;Enter Year Again (YYYY)&gt;&gt;
-	AND branch = &lt;&lt;Select Library Again|branches&gt;&gt;
+WHERE YEAR(datetime) = &lt;&lt;Enter Year(YYYY)&gt;&gt;
+	AND branch = &lt;&lt;Choose Library|branches&gt;&gt;
 	AND type IN ('issue', 'renew')</code></pre>
 				<h4><span id="Patron_count_by_patron_category">Patron count by patron category</span></h4>
 				<p> Totals number of patrons in each category at a selected library with a grand total at the end.</p>
@@ -661,7 +661,7 @@ GROUP BY b.categorycode
 UNION ALL
 SELECT 'TOTAL' categories, COUNT(*)
 FROM borrowers
-WHERE branchcode = &lt;&lt;Choose Library Again|branches&gt;&gt;</code></pre>
+WHERE branchcode = &lt;&lt;Choose Library|branches&gt;&gt;</code></pre>
 				<h4><span id="Item_count_by_collection_code">Item count by collection code</span></h4>
 				<p> Gives total number of items in each collection code with a grand total at the end.</p>
 				<pre><code class="language-sql">SELECT authorised_values.lib AS 'Collection Code', COUNT(1) AS Count
