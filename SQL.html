@@ -80,7 +80,7 @@
 				<h4>View Bib Record</h4>
 				<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/catalogue/detail.pl?biblionumber=',items.biblionumber,'\" target="_blank"&gt;'"View"'&lt;/a&gt;') AS "view"</code></pre>
 				<h4>Edit Item Record</h4>
-				<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',b.biblionumber,'&itemnumber=',item.itemnumber,'\" target="_blank" &gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
+				<pre><code class="language-sql">CONCAT('&lt;a href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',b.biblionumber,'&itemnumber=',items.itemnumber,'\" target="_blank" &gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
 				<h4>View Patron Account</h4>
 				<pre><code class="language-sql">CONCAT ('&lt;a href=\"/cgi-bin/koha/circ/circulation.pl?borrowernumber=',b.borrowernumber,'\" target="_blank"&gt;',"View Account",'&lt;/a&gt;') AS "view"</code></pre>
 				<h4>Edit Patron Account</h4>
@@ -103,7 +103,7 @@
  }
  &lt;/style&gt;</code></pre>
 				<h4>Add a class to the link</h4>
-				<pre><code class="language-sql">CONCAT('&lt;a class="clicked" target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',b.biblionumber,'&itemnumber=',item.itemnumber,'\" &gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
+				<pre><code class="language-sql">CONCAT('&lt;a class="clicked" target="_blank" href=\"/cgi-bin/koha/cataloguing/additem.pl?op=edititem&biblionumber=',b.biblionumber,'&itemnumber=',items.itemnumber,'\" &gt;',"Edit",'&lt;/a&gt;') AS "edit"</code></pre>
 			<h3><span id="sumcasewhen">SUM CASE WHEN</span></h3>
 				<p>Useful for categorizing multiple locations/ccodes/itypes together. For example, we have multiple YA shelf locations in two different AV ranges.</p>
 				<pre><code class="language-sql">SELECT SUM(CASE WHEN (i.location BETWEEN '101800YAFIC' AND '102100YAFICSF')
@@ -125,7 +125,7 @@ FROM branchtransfers bt</code></pre>
  LEFT JOIN authorised_values a ON (a.authorised_value=i.itemlost AND a.category='LOST')
  LEFT JOIN authorised_values a2 ON (a2.authorised_value=i.notforloan AND a2.category='NOT_LOAN')
  LEFT JOIN authorised_values a3 ON (a3.authorised_value=i.withdrawn AND a3.category='WITHDRAWN')
- LEFT JOIN authorised_values a4 ON (a4.authorised_value=i.withdrawn AND a4.category='DAMAGED')</code></pre>			
+ LEFT JOIN authorised_values a4 ON (a4.authorised_value=i.damaged AND a4.category='DAMAGED')</code></pre>			
 		</div>
 		<div id="SQL_Reports_Library">
 		<h2><span id="Reports">Reports</span></h2>
