@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    font-family: arial, sans-serif;
+	margin: 30px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+
+td, th {
+    border: 1px solid #dddddd;
+    padding: 8px;
+}
+
+td {
+	text-align: left;
+	}
+
+th {
+	text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: #eee;
+}
+
+table.sortable thead {
+    background-color:#eee;
+    color:#666666;
+    font-weight: bold;
+    cursor: default;
+}
+
+
+.sfrcr-navbar {
+    margin-bottom: 14px;
+}
+
+.sfrcr-navbar li {
+    display: inline;
+}
+
+.sfrcr-navbar a {
+    background-color: mintcream;
+    border: thin solid #dddddd;
+	border-bottom: thick solid #dddddd;
+    color: black;
+    text-decoration: none;
+	font-size: x-large;
+    margin-left: -6px;
+    padding: 10px 25px;
+}
+
+.highlightX,.highlightX:hover{
+	border-bottom:thick solid #f44336 !important
+}
+
+.sfrcr-button {
+  display: inline-block;
+  padding: 5px 15px;
+  font-size: medium;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+}
+
+.sfrcr-button:hover {
+    background-color: #5dec62;
+}
+
+.sfrcr-button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 6px 12px 0 rgba(0,0,0,0.24), 0 9px 25px 0 rgba(0,0,0,0.19);
+  transform: translateY(4px);
+}
+
+.bold {
+   font-weight: bold;
+}
+
+.doclinks {
+	text-align: center;
+}
+
+a.gd {
+    background: rgba(0, 0, 0, 0) url("http://www.sekls.net/Documents/CleanUpReports/gddbsprite.png") no-repeat scroll 0 0;
+    display: inline-block;
+    height: 30px;
+    width: 31px;
+}
+
+a.db {
+    background: rgba(0, 0, 0, 0) url("http://www.sekls.net/Documents/CleanUpReports/gddbsprite.png") no-repeat scroll -32px 1px;
+    display: inline-block;
+    height: 30px;
+    width: 33px;
+}
+
+</style>
+<script src="http://www.sekls.net/Documents/CleanUpReports/sorttable.js"></script>
+
+<script>
+function openCat(evt, catName) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("reports");
+  for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < x.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" highlightX", "");
+  }
+  document.getElementById(catName).style.display = "block";
+  evt.currentTarget.className += " highlightX";
+}
+</script>
+
+</head>
+<body>
+<ul class="sfrcr-navbar">
+  <li><a href="javascript:void(0)" class="tablink highlightX"onclick="openCat(event, 'circulation')">Circulation</a></li>
+  <li><a href="javascript:void(0)" class="tablink" onclick="openCat(event, 'cataloging')">Cataloging</a></li>
+  <li><a href="javascript:void(0)" class="tablink" onclick="openCat(event, 'patrons')">Patrons</a></li>
+</ul>
+
+<div id="circulation" class="reports">
+<table class="sortable">
+  <tr>
+    <th>Report</th>
+	<th>Category</th>
+    <th>Description</th>
+	<th>Action</th>
+	<th>Frequency</th>
+    <th class="sorttable_nosort">Run</th>
+	<th class="sorttable_nosort">Documentation</th>
+  </tr>
+  <tr>
+    <td class="bold">Holds awaiting pickup</td>
+    <td>Holds</td>
+    <td>Holds that are 'Waiting' at your library.</td>
+    <td>Use to remove unwanted holds. Be sure to check the item in again after you cancel the hold.</td>
+	<td>Daily</td>
+    <td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/circ/waitingreserves.pl" target="_blank">Run</a></td>
+	<td class="doclinks">
+		<a class="gd" target="_blank" href="https://drive.google.com/file/d/0BwSO_oYghmAxc21YQVdIaFpQd1k/view?usp=sharing"></a>
+		<a class="db" target="_blank" href="https://www.dropbox.com/s/bl1yiwwitupg58g/UnclaimedHoldsWorkflow-Handout.pdf?dl=0"></a>
+	</td>
+  </tr>
+    <tr>
+    <td class="bold">Items awaiting pickup AT other libraries</td>
+    <td>Holds</td>
+    <td>Your items waiting at other libraries.</td>
+    <td>Track down items that have exceeded the 7-day waiting period. Check your library for these items before contacting the borrowing library.</td>
+	<td>Daily</td>
+    <td><a class="sfrcr-button" href="https://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2608&phase=Run%20this%20report" target="_blank">Run</a></td>
+	<td></td>
+  </tr>
+  <tr>
+	<td class="bold">Orphaned holds</td>
+    <td>Holds</td>
+    <td>Holds where items are no longer available.</td>
+    <td>Remove the hold and look elsewhere for the item.</td>
+    <td>Weekly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2440&phase=Run%20this%20report" target="_blank">Run</a></td>
+	<td></td>
+  </tr>
+  <tr>
+    <td class="bold">Old holds</td>
+    <td>Holds</td>
+    <td>Finds older holds that may need attention.</td>
+    <td>Delete any unfillable holds and follow-up with patron; pursue items elsewhere if needed.</td>
+    <td>Monthly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2368&phase=Run%20this%20report" target="_blank">Run</a></td>
+	<td></td>
+  </tr>
+  <tr>
+	<td class="bold">Transfers to receive</td>
+    <td>Transfers</td>
+    <td>Items on their way to your library that have not arrived yet.</td>
+    <td>Investigate items that are taking longer than expected to arrive.</td>
+    <td>Weekly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/circ/transferstoreceive.pl" target="_blank">Run</a></td>
+    <td class="doclinks">
+		<a class="gd" target="_blank" href="https://drive.google.com/file/d/0BwSO_oYghmAxLWxqblhXVjlRWWs/view?usp=sharing"></a>
+		<a class="db" target="_blank" href="https://www.dropbox.com/s/d0vxsk3yxc1myo6/Transfers%20%26%20Replacing%20Items.pdf?dl=0"></a>
+	</td>
+  </tr>
+  <tr>
+    <td class="bold">Transfers FROM your library</td>
+    <td>Transfers</td>
+    <td>Items departing your library that have not yet arrived at their destination.</td>
+    <td>Check that the items on this report are truly in transit and not somewhere in your library.</td>
+    <td>Monthly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2082&phase=Run%20this%20report" target="_blank">Run</a></td>  
+	<td></td>
+  </tr>
+    <tr>
+    <td class="bold">Items 'Available' at the wrong library</td>
+    <td>Transfers</td>
+    <td>Items with the incorrect holding location that have fallen out of transit.</td>
+    <td>Search for these items. If found, check in. For items that are 'lost and paid for', the cataloging may need adjusted.</td>
+    <td>Monthly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2479&phase=Run%20this%20report" target="_blank">Run</a></td>  
+	<td></td>
+  </tr>
+  <tr>
+	<td class="bold">Long overdues FROM other libraries</td>
+    <td>Overdues</td>
+    <td>Items owned by other libraries, long overdue to your patrons.</td>
+    <td>Try to recover the item from the patron. Consider charging the patron for the item and reimbursing the lending library.</td>
+    <td>Monthly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2369&phase=Run%20this%20report" target="_blank">Run</a></td>  
+    <td class="doclinks">
+		<a class="gd" target="_blank" href="https://drive.google.com/file/d/0BwSO_oYghmAxN0F3V2RobUNjZlU/view?usp=sharing"></a>
+		<a class="db" target="_blank" href="https://www.dropbox.com/s/fenmq1raewnm07j/Item%20Reimbursement.pdf?dl=0"></a>
+	</td>
+  </tr>
+  <tr>
+	<td class="bold">Long overdues AT other libraries</td>
+    <td>Overdues</td>
+    <td>Your items, long overdue to patrons at other libraries.</td>
+    <td>Communicate with borrowing library. Request reimbursement if necessary.</td>
+    <td>Monthly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2370&phase=Run%20this%20report" target="_blank">Run</a></td>  	
+    <td></td>
+  </tr>
+  <tr>
+	<td class="bold">Lost items AT other libraries</td>
+    <td>Statuses</td>
+    <td>Your items with lost statuses that appear to be at other libraries.</td>
+    <td>Check to see if the item is at your library. If not, follow-up with other involved parties.</td>
+    <td>Monthly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2050&phase=Run%20this%20report" target="_blank">Run</a></td>  		
+    <td></td>
+  </tr>
+  <tr>
+	<td class="bold">Lost items filtered by Lost status</td>
+    <td>Statuses</td>
+    <td>General <em>Lost</em> report.</td>
+    <td>Review items in each lost status, search for items, check in if found.</td>
+    <td>Monthly</td>
+    <td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=1744&phase=Run%20this%20report" target="_blank">Run</a></td>  	
+	<td></td>
+  </tr>
+  <tr>
+	<td class="bold">Items with In Processing status</td>
+    <td>Statuses</td>
+    <td>Items that have had an <em>In processing</em> status for over 3 weeks.</td>
+    <td>Locate these items and check them in to remove the status.</td>
+    <td>Monthly</td>
+    <td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2362&phase=Run%20this%20report" target="_blank">Run</a></td>  		
+    <td></td>
+  </tr>
+</table>
+</div>
+
+<div id="cataloging" class="reports" style="display:none">
+<table class="sortable">
+  <tr>
+    <th>Report</th>
+	<th>Category</th>
+    <th>Description</th>
+	<th>Action</th>
+	<th>Frequency</th>
+    <th class="sorttable_nosort">Run</th>
+	<th class="sorttable_nosort">Documentation</th>
+  </tr>
+  <tr>
+    <td class="bold">Bad barcodes</td>    
+    <td>Items</td>
+    <td>Items with barcodes that won't work.</td>
+    <td>Click the edit link and fix the barcode by pulling the item and rescanning it. Sometimes barcodes on this report appear correct - those usually have extra blank spaces.</td>
+    <td>Monthly</td>
+    <td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2366&phase=Run%20this%20report" target="_blank">Run</a></td>  
+	<td></td>
+  </tr>
+    <tr>
+    <td class="bold">Call number space checker</td>  
+    <td>Items</td>
+    <td>Looks for leading, trailing and duplicate spaces in call numbers.</td>
+    <td>Click the edit link and remove the extra spaces from the call number.</td>
+    <td>Monthly</td>
+    <td><a class="sfrcr-button" href="https://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2508&phase=Run%20this%20report" target="_blank">Run</a></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td class="bold">Items with missing data</td>  
+    <td>Items</td>
+    <td>Looks for blank shelf locations, collection codes, item types and barcodes.</td>
+    <td>Click the edit link and fill in the missing data.</td>
+    <td>Monthly</td>
+    <td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2445&phase=Run%20this%20report" target="_blank">Run</a></td>
+    <td></td>
+  </tr>
+  <tr>
+	<td class="bold">Mismatched ccode / shelf locations</td>
+	<td>Items</td>
+    <td>Looks for odd ccode/shelf location combinations.</td>
+    <td>Make sure the ccode and/or shelf location are correct (sometimes they are), adjust if not.</td>
+    <td>Monthly</td>
+    <td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2446&phase=Run%20this%20report" target="_blank">Run</a></td>
+	<td></td>
+  </tr>
+  <tr>
+    <td class="bold">Series with wrong indicator</td>
+    <td>Records</td>
+    <td>Finds 490s with a 1 in the first indicator.</td>
+    <td>Change the 1 to a 0.</td>
+    <td>Monthly</td>
+	<td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2444&phase=Run%20this%20report" target="_blank">Run</a></td>
+    <td></td>
+  </tr>
+</table>
+</div>
+
+<div id="patrons" class="reports" style="display:none">
+<table class="sortable">
+  <tr>
+    <th>Report</th>
+	<th>Category</th>
+    <th>Description</th>
+	<th>Action</th>
+	<th>Frequency</th>
+    <th class="sorttable_nosort">Run</th>
+	<th class="sorttable_nosort">Documentation</th>
+  </tr>
+  <tr>
+    <td class="bold">Patron Pruning</td>    
+    <td>Deletion</td>
+    <td>Inactive patrons with clear accounts. No activity in the past 3 years. Excludes ILL and STAFF accounts.</td>
+    <td>Download the report, delete out any patrons you want to keep, send the list of patrons to delete to SEK for batch deletion.</td>
+    <td>Yearly</td>
+    <td><a class="sfrcr-button" href="http://staff.seknfind.org/cgi-bin/koha/reports/guided_reports.pl?reports=2483&phase=Run%20this%20report" target="_blank">Run</a></td>  
+    <td class="doclinks">
+		<a class="gd" target="_blank" href="https://drive.google.com/file/d/0BwSO_oYghmAxQm9MTnFNYW96SHM/view?usp=sharing"></a>
+		<a class="db" target="_blank" href="https://www.dropbox.com/s/dn6mbe6ng7w8otk/Patron%20Pruning%20Handout.pdf?dl=0"></a>
+	</td>
+  </tr>
+</table>
+</div>
+
+</body>
+</html>
